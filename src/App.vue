@@ -1,8 +1,9 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
+  
   <!-- <HelloWorld msg="Welcome to Your Carlos.js App"/> -->
   <SingleConversation msg="Conversation"/>
   <AllContacts msg="Contacts"/>
+  <img alt="Vue logo" src="./assets/logo.png">
   <AllChats msg="Chats"/>
   <TextBar msg="Text Bar"/>
 

@@ -5,11 +5,24 @@
 </template>
 
 <script>
+
+import axios from 'axios'
+
 export default {
     name: 'AllChats',
     props: {
         msg: String
-    }
+    },
+    data() {
+            return {
+                api: []
+                
+            }
+        },
+    async mounted () {
+        this.api = await axios.get('')
+        
+    },
     
 }
 </script>
