@@ -1,36 +1,50 @@
-<template>
-    <div id="app">
-        <h1>{{ msg }}</h1>
+<template >
+    <div id="temp">
+        <div id="app">
+            <h1>{{ msg }}</h1>
+                <form action="">
+                    <input type="text" placeholder="Search...">
+                </form>
+            <div v-for="element in this.contacts" :key="element.id" class="contact">
+            
+            <!-- <div>
+                {{element.id}}
+            </div> -->
+            <!-- <div>
+                {{element.img}}
+            </div> -->
+            <h3 class="name">
+                {{element.title}}
+            </h3>
+            <!-- <div>
+                {{element.date}}
+            </div> -->
+            </div>
+        </div> 
     </div>
 </template>
 
 <script>
-import axios from 'axios'
 
 export default {
     name: 'AllContacts',
     props: {
-        msg: String
+        msg: String,
+        contacts: Array,
     },
     data() {
             return {
-                api: []
+                api: [],
+                allContacts: [],
+                image: [],
                 
             }
         },
-    async mounted () {
-        this.api = await axios.get('https://api.coloredstrategies.com/contacts')
-        
+    mounted () {
         
     },
     watch: {
-        api: function (){
-
-            this.api.data.data.forEach(e => {
-                console.log('contact:',e.id , e.title)
-            });
-
-        }
+        
     }
     
 }
@@ -39,5 +53,30 @@ export default {
 <style scoped>
     #app {
         background-color: rgb(119, 119, 154);
+        display: flex;
+        color: wheat;
+        width: 300px;
+        height: 100%;
+        justify-content: right;
+        flex-direction: column;
+        
+    }
+
+    #temp{
+        display: flex;
+        justify-content: end;
+        background-color: violet;
+        
+    }
+
+    .contact {
+        background-color: red;
+        margin: 8px;
+        display: flex;
+        
+    }
+
+    .name {
+        margin-left: 10px;
     }
 </style>

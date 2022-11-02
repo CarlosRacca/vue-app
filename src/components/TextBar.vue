@@ -1,7 +1,12 @@
 <template>
     <div id="app">
         <h1>{{ msg }}</h1>
+        <form action="">
+            <input type="text" placeholder="Say something">
+            <button>Send</button>
+        </form>
     </div>
+    
 </template>
 
 <script>
