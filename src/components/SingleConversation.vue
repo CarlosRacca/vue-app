@@ -1,9 +1,9 @@
 <template>
     <div id="app">
-        <h1>{{ msg }}</h1>
+        <h1 class="chatTop">{{this.chat.name}}</h1>
         <div v-if="this.existingChat">
             <h1>
-                {{this.chat.name}}
+                
             </h1>
             <p v-for="element in this.chat.messages" :key="element.id">
                 {{element.sender}} -- {{element.text}} -- {{element.time}}
@@ -36,8 +36,7 @@ export default {
     },
 
     watch: {
-        chat: function (){
-            console.log('1',this.chat)
+        chat: function (){            
             if(this.chat){
                 this.existingChat = true
                 this.newChat = false
@@ -55,5 +54,20 @@ export default {
 <style scoped>
     #app {
         background-color: aqua;
+        display: flex;
+        flex-direction: column;
+        /* margin-right: 300px; */
+        /* padding-bottom: 100%; */
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+
+    }
+
+    .chatTop {
+        background-color: green;
+        width: 100%;
+        height: 100px;
+        margin-top: 0px;
     }
 </style>

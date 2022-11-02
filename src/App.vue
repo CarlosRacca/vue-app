@@ -1,22 +1,25 @@
 <template>
-  <SingleConversation msg="Conversation" :chat='this.chat'/>
-  <div class="buttons">
-    <button v-on:click="showContacts" class="buttonClicked" v-if="this.contactsClicked">Contacts</button>
-    <button v-on:click="showContacts" class="buttonNotClicked" v-if="!this.contactsClicked">Contacts</button>
-    <button v-on:click="showMessages" class="buttonClicked" v-if="this.messagesClicked">Messages</button>  
-    <button v-on:click="showMessages" class="buttonNotClicked" v-if="!this.messagesClicked">Messages</button>  
+  <div class="divGral">
+    <SingleConversation 
+      msg="Conversation" 
+      :chat='this.chat'
+    />  
+    <AllContacts 
+      classname='Contacts' 
+      v-if="viewContacts"
+      :contacts="this.apiContactsCleaned" 
+      :chats='this.contacts' 
+      @contactClicked='contactSelected' 
+      @chatClicked='chatSelected'
+    />
   </div>
-  
-  <AllContacts classname='Contacts' v-if="viewContacts" msg="Contacts" :contacts="this.apiContactsCleaned" @contactClicked='contactSelected'/>
-  <AllChats v-if="viewMessages" msg="Chats" :chats='this.contacts'/>
-
 </template>
 
 <script>
-import AllContacts from './components/AllContacts.vue'
-import AllChats from './components/AllChats.vue'
-import SingleConversation from './components/SingleConversation.vue'
 import axios from 'axios'
+
+import AllContacts from './components/AllContacts.vue'
+import SingleConversation from './components/SingleConversation.vue'
 
 
 export default {
@@ -24,7 +27,6 @@ export default {
   components: {
     SingleConversation,
     AllContacts,
-    AllChats,
 
   },
   data () {
@@ -65,17 +67,22 @@ export default {
       this.messagesClicked = true
     },
 
-    contactSelected: function (id){
-
-    
+    chatSelected: function (id){
       
       this.chat = this.apiMessagesCleaned.filter(el => el.users[1] === id)[0]
       if(this.chat){
         
         this.chat.name = this.apiContactsCleaned.filter(el => el.id === id)[0].title
       }
+    },
 
+    contactSelected: function (id){
       
+      this.chat = this.apiMessagesCleaned.filter(el => el.users[1] === id)[0]
+      if(this.chat){
+        
+        this.chat.name = this.apiContactsCleaned.filter(el => el.id === id)[0].title
+      }
     }
   },
   watch: {
@@ -116,14 +123,14 @@ export default {
   min-height: 100%;
   text-align: center;
   color: #2c3e50;
-  /* margin-top: 60px; */
   background-color: tomato;
 }
 
 .buttons{
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   height: 100px;
+  
 }
 
 .buttonClicked{
@@ -136,6 +143,12 @@ export default {
   width: 150px;
   font-size: 30px;
   background-color: yellow;
+}
+
+.divGral{
+  display: flex;
+  justify-content: space-between;
+  
 }
 
 
