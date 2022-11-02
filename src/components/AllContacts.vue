@@ -5,20 +5,11 @@
                 <form action="">
                     <input type="text" placeholder="Search...">
                 </form>
-            <div v-for="element in this.contacts" :key="element.id" class="contact">
-            
-            <!-- <div>
-                {{element.id}}
-            </div> -->
-            <!-- <div>
-                {{element.img}}
-            </div> -->
-            <h3 class="name">
+            <div v-for="element in this.contacts" :key="element.id" class="contact" v-on:click="this.handleClick(element.id)">
+
+            <h3 class="name" >
                 {{element.title}}
             </h3>
-            <!-- <div>
-                {{element.date}}
-            </div> -->
             </div>
         </div> 
     </div>
@@ -45,6 +36,11 @@ export default {
     },
     watch: {
         
+    },
+    methods: {
+        handleClick: function(id){
+            this.$emit('contactClicked',id)
+        }
     }
     
 }

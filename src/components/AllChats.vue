@@ -55,8 +55,7 @@ export default {
 
     .chats {
         background-color: red;
-        margin-bottom: 5px;
-        margin-top: 5px;
+        margin: 5px;
         display: flex;
         justify-content: space-around;
     }
