@@ -49,6 +49,7 @@ export default {
         },
     mounted () {
         
+        
     },
     watch: {
         
@@ -116,7 +117,7 @@ export default {
     }
     
     .inputContacts::placeholder{
-        color: blueviolet;
+        color: grey;
 
     }
 

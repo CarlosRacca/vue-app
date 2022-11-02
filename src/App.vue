@@ -43,9 +43,10 @@ export default {
       chat: [],
     }
   },
-  async mounted () {
+  async mounted () {    
     this.apiContacts = await axios.get("https://api.coloredstrategies.com/contacts")
     this.apiMessages = await axios.get('https://api.coloredstrategies.com/conversations')
+
   },
   methods: {
     showContacts: function(){
@@ -68,11 +69,12 @@ export default {
     },
 
     chatSelected: function (id){
-      
+
       this.chat = this.apiMessagesCleaned.filter(el => el.users[1] === id)[0]
       if(this.chat){
         
         this.chat.name = this.apiContactsCleaned.filter(el => el.id === id)[0].title
+        this.chat.date = this.apiContactsCleaned.filter(el => el.id === id)[0].date
       }
     },
 
@@ -82,7 +84,20 @@ export default {
       if(this.chat){
         
         this.chat.name = this.apiContactsCleaned.filter(el => el.id === id)[0].title
+        this.chat.date = this.apiContactsCleaned.filter(el => el.id === id)[0].date
+
+        console.log('chat', this.chat)
       }
+      else{
+        this.chat = {
+          users: [1, id],
+          date: this.apiContactsCleaned.filter(el => el.id === id)[0].date,
+          name: this.apiContactsCleaned.filter(el => el.id === id)[0].title,
+          id: this.apiMessagesCleaned.length + 1,
+          messages: []
+        }
+      }
+
     }
   },
   watch: {
@@ -136,13 +151,14 @@ export default {
 .buttonClicked{
   width: 150px;
   font-size: 30px;
-  border-top: 10px solid black;
+  border-top: 10px solid rgb(79, 118, 191);
+  color: rgb(79, 118, 191);
 }
 
 .buttonNotClicked {
   width: 150px;
   font-size: 30px;
-  background-color: yellow;
+  /* background-color: yellow; */
 }
 
 .divGral{
