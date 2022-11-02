@@ -8,8 +8,8 @@
                 <button v-on:click="showMessages" class="buttonNotClicked" v-if="!this.messagesClicked">Messages</button>  
             </div>
             <div v-if="this.viewContacts">
-                <form action="">
-                    <input type="text" placeholder="Search...">
+                <form action="" class="formContacts">
+                    <input class="inputContacts" type="text" placeholder="Search...">
                 </form>
                 <div v-for="element in this.contacts" :key="element.id" class="contact" v-on:click="this.handleClickContact(element.id)">
 
@@ -101,6 +101,26 @@ export default {
         background-color: violet;
         
     }
+
+    .formContacts {
+        padding: 5px;
+        margin-left: 3px;
+        margin-right: 10px;
+    }
+
+    .inputContacts {
+        width: 100%;
+        height: 50px;
+        border-radius: 6px;
+        font-size: 22px;
+    }
+    
+    .inputContacts::placeholder{
+        color: blueviolet;
+
+    }
+
+
 
     .contact {
         background-color: red;

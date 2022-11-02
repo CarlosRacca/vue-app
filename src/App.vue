@@ -136,7 +136,7 @@ export default {
 .buttonClicked{
   width: 150px;
   font-size: 30px;
-  background-color: rgb(73, 36, 175);
+  border-top: 10px solid black;
 }
 
 .buttonNotClicked {
