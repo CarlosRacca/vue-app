@@ -8,14 +8,36 @@
                 <button v-on:click="showMessages" class="buttonNotClicked" v-if="!this.messagesClicked">Messages</button>  
             </div>
             <div v-if="this.viewContacts">
-                <form action="" class="formContacts">
-                    <input class="inputContacts" type="text" placeholder="Search...">
+                <form action="submit" class="formContacts" v-on:submit='handleSearch'>
+                    <input name="search" class="inputContacts" type="text" placeholder="Search..." v-model="search">
                 </form>
-                <div v-for="element in this.contacts" :key="element.id" class="contact" v-on:click="this.handleClickContact(element.id)">
 
-                <h3 class="name" >
-                    {{element.title}}
-                </h3>
+                <div v-if="this.contactsFiltered.length > 0">
+                    <div v-for="element in this.contactsFiltered" :key="element.id" class="contact" v-on:click="this.handleClickContact(element.id)">
+
+                    <h3 class="name" >
+                        {{element.title}}
+                    </h3>
+                    </div>
+
+                </div>
+                <div v-else>
+                    <div v-if="this.contactsFiltered.length === 0 && this.search.length > 0 ">
+                        
+                        <h3 class="noMatch" >
+                            No contacts matching
+                        </h3>
+
+                    </div>
+                    <div v-else>
+                        <div v-for="element in this.contacts" :key="element.id" class="contact" v-on:click="this.handleClickContact(element.id)">
+
+                        <h3 class="name" >
+                            {{element.title}}
+                        </h3>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div v-if="this.viewMessages" >
@@ -39,26 +61,55 @@ export default {
     data() {
             return {
                 api: [],
-                allContacts: [],
                 image: [],
                 viewMessages: false,
                 viewContacts: true,
                 contactsClicked: true,
-                messagesClicked: false,     
+                messagesClicked: false,    
+                search: '', 
+                contactsFiltered: [],
+                contactsRepeated: [],
+                allChats: []
             }
         },
     mounted () {
         
-        
     },
     watch: {
+        search: function () {
+
+            this.contactsFiltered = []
+
+            this.contacts.forEach(el => {
+                let mayus = el.title.toUpperCase()
+                
+                if(mayus.includes(this.search.toUpperCase())){
+                    this.contactsFiltered.push(el)
+
+                    this.contactsRepeated = this.contactsFiltered.filter(elem => el.title === elem.title)
+                    if(this.contactsRepeated.length > 1){
+                       this.contactsFiltered.pop()
+                    }                    
+                }
+            })
+
+        },
+
         
     },
     methods: {
         handleClickContact: function(id){
             this.$emit('contactClicked',id)
         },
-        handleClickChat: function(id){
+
+        handleSearch: function (e) {
+            e.preventDefault();
+
+            console.log(this.search)
+        },
+
+        handleClickChat: function(id ){
+            
             this.$emit('chatClicked',id)
         },
         showContacts: function(){
@@ -86,20 +137,22 @@ export default {
 
 <style scoped>
     #app {
-        background-color: rgb(119, 119, 154);
+        background-color: rgb(120, 150, 160);
+        height: 100%;
         display: flex;
-        color: wheat;
+        color: rgb(30, 54, 73);
         /* width: 300px; */
         /* height: 100%; */
         /* justify-content: right; */
         flex-direction: column;
+        height: 100vh;
         
     }
 
     #temp{
         display: flex;
         /* justify-content: flex-end; */
-        background-color: violet;
+        /* background-color: rgb(120, 150, 160); */
         
     }
 
@@ -117,27 +170,36 @@ export default {
     }
     
     .inputContacts::placeholder{
-        color: grey;
+        color: rgb(30, 54, 73);
 
     }
 
 
 
     .contact {
-        background-color: red;
+        border-radius: 5px;
+        background-color: rgb(30, 54, 73);
         margin: 8px;
         display: flex;
+        color:white;
         
     }
 
     .chats {
-        background-color: red;
+        border-radius: 5px;
+        background-color: rgb(30, 54, 73);
         margin: 5px;
         display: flex;
         justify-content: space-around;
+        color:white;
     }
 
     .name {
         margin-left: 10px;
+    }
+
+    .noMatch{
+        padding-top: 300px;
+        /* padding-bottom: 700px; */
     }
 </style>

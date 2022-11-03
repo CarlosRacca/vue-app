@@ -3,8 +3,10 @@
     <SingleConversation 
       msg="Conversation" 
       :chat='this.chat'
+      @chatModified='chatModified'
+      @showContacts='showContacts'
     />  
-    <AllContacts 
+    <AllContacts
       classname='Contacts' 
       v-if="viewContacts"
       :contacts="this.apiContactsCleaned" 
@@ -31,8 +33,7 @@ export default {
   },
   data () {
     return {
-      viewMessages: false,
-      viewContacts: true,
+      viewContacts: false,
       contactsClicked: true,
       messagesClicked: false,
       apiContacts: [],
@@ -41,6 +42,8 @@ export default {
       apiMessagesCleaned: [],
       contacts: [],
       chat: [],
+      chatMod: [],
+      varForChat: false
     }
   },
   async mounted () {    
@@ -49,32 +52,28 @@ export default {
 
   },
   methods: {
+    chatModified: function () {
+      this.chatMod = this.chat
+      console.log('estoy en app, chatModified',this.chat)
+      console.log('viendo los contacts',this.contacts)
+    },
+
     showContacts: function(){
-      if(this.viewMessages){
-        this.viewMessages = false
-      }
+
       this.viewContacts = true
 
       this.contactsClicked = true
       this.messagesClicked = false
     },
-    showMessages: function(){
-      if(this.viewContacts){
-        this.viewContacts = false
-      }
-      this.viewMessages = true
-
-      this.contactsClicked = false
-      this.messagesClicked = true
-    },
 
     chatSelected: function (id){
-
+    
       this.chat = this.apiMessagesCleaned.filter(el => el.users[1] === id)[0]
       if(this.chat){
         
         this.chat.name = this.apiContactsCleaned.filter(el => el.id === id)[0].title
         this.chat.date = this.apiContactsCleaned.filter(el => el.id === id)[0].date
+        this.chat.img = this.apiContactsCleaned.filter(el => el.id === id)[0].img
       }
     },
 
@@ -85,14 +84,15 @@ export default {
         
         this.chat.name = this.apiContactsCleaned.filter(el => el.id === id)[0].title
         this.chat.date = this.apiContactsCleaned.filter(el => el.id === id)[0].date
+        this.chat.img = this.apiContactsCleaned.filter(el => el.id === id)[0].img
 
-        console.log('chat', this.chat)
       }
       else{
         this.chat = {
           users: [1, id],
           date: this.apiContactsCleaned.filter(el => el.id === id)[0].date,
           name: this.apiContactsCleaned.filter(el => el.id === id)[0].title,
+          img: this.apiContactsCleaned.filter(el => el.id === id)[0].img,
           id: this.apiMessagesCleaned.length + 1,
           messages: []
         }
@@ -123,6 +123,40 @@ export default {
         
       }) :
       console.log(1)
+    },
+
+    chatMod: function(){
+      console.log('watch chat, contacts',this.contacts)
+      console.log('watch chat, chat',this.chat)
+      let index = 0
+      this.contacts.forEach(el => {
+        if(this.chat.name === el.title){
+          index = 1
+          el.lastMessage = this.chat.lastMessageTime
+        }
+      })
+      this.apiMessagesCleaned.forEach(element => {
+        if(this.chat.users[1] === element.id){
+          element = this.chat
+        }
+      })
+      if(index === 0){
+        this.contacts.push({
+          date: this.chat.date,
+          id: this.chat.users[1],
+          lastMessage: this.chat.lastMessageTime,
+          title: this.chat.name,
+          img: this.chat.img
+        })
+
+        this.apiMessagesCleaned.push(this.chat)
+      }
+
+      this.varForChat = true
+
+      console.log('api',this.apiMessagesCleaned)
+
+      
     }
   }
 }
@@ -130,7 +164,7 @@ export default {
     
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family:'Courier New', Courier, monospace;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -138,27 +172,37 @@ export default {
   min-height: 100%;
   text-align: center;
   color: #2c3e50;
-  background-color: tomato;
+  /* background-color: tomato; */
 }
 
 .buttons{
+  
   display: flex;
   justify-content: flex-end;
   height: 100px;
+  background-color: rgb(120, 150, 160);
+  
   
 }
 
 .buttonClicked{
+  font-family: 'Courier New', Courier, monospace;
   width: 150px;
-  font-size: 30px;
-  border-top: 10px solid rgb(79, 118, 191);
-  color: rgb(79, 118, 191);
+  font-size: 25px;
+  border: none;
+  border-top: 10px solid rgb(30, 54, 73);
+  color: rgb(30, 54, 73);
+  background-color: rgb(120, 150, 160);
+  padding-bottom: 12px;
 }
 
 .buttonNotClicked {
+  font-family: 'Courier New', Courier, monospace;
   width: 150px;
-  font-size: 30px;
+  font-size: 25px;
+  border: none;
   /* background-color: yellow; */
+  background-color: rgb(120, 150, 160);
 }
 
 .divGral{

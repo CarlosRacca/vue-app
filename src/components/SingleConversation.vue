@@ -25,13 +25,21 @@
 
         </div>
         
-        <h1 class="chatTop"  v-else>
-            Choose one chat
-        </h1>
+        <div class='landing'  v-else>
+            <div v-if="this.buttonStart">
+                Please choose one chat in the right to start.
+            </div>
+            <div v-else>
+                Welcome to this chat application.
+
+                <button class="buttonOpen" v-on:click="handleStart"> Enter</button>
+
+            </div>
+        </div>
         
         
-        <form action="" class="formText">
-            <input type="text" placeholder="Say something" class="inputText">
+        <form v-if="this.chat.length !== 0" action="submit" class="formText" v-on:submit="handleSend">
+            <input type="text" placeholder="Say something" class="inputText" name="text" v-model="text">
             <button class="buttonSend">></button>
         </form>
     </div>
@@ -48,12 +56,15 @@ export default {
     data () {
         return {
             newChat: false,
-            existingChat: false
+            existingChat: false,
+            text: '',
+            modifiedChat: this.chat,
+            buttonStart: false
         }
     },
 
     mounted () {
-        console.log(this.chat)
+        
     },
 
     watch: {
@@ -66,21 +77,96 @@ export default {
                 this.newChat = true
                 this.existingChat = false
             }
+        },
+
+        modifiedChat: function () {
+            if(this.modifiedChat.messages.length > 0){
+                this.existingChat = true
+                this.newChat = false
+            }
+            else{
+                this.newChat = true
+                this.existingChat = false
+            }
+        },
+
+    },
+
+    methods: {
+        handleStart: function(e){
+            e.preventDefault()
+
+            this.buttonStart = true
+
+            this.$emit('showContacts')
+
+        },
+        handleSend: function (e){
+            this.modifiedChat = this.chat
+            e.preventDefault()
+
+            let today = new Date()
+            let now = today.toLocaleString().split(' ')[1].split(":")
+            let time =  now[0] + ':' + now[1]
+
+            this.modifiedChat.messages.push({
+                sender: 1,
+                time: time,
+                text: this.text
+            })
+
+            this.modifiedChat.lastMessageTime = time
 
             console.log(this.chat)
+
+            this.$emit('chatModified', this.chat)
+            
+            this.text = ''
         }
     }
+
     
 }
 </script>
 
 <style scoped>
-    #app {
-        background-color: aqua;
+    .landing{
+        position:relative;
+        /* padding:100px;
+        /* padding-bottom: 720px; */
+        /* padding-right: 0px;
+        margin-right: 100px;  */
+        
+        top:0;
+        left:0;
+        width: 85vw;
+        height: 100vh;
+        background:rgb(180, 194, 206);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 50px;
         display: flex;
         flex-direction: column;
-        /* margin-right: 300px; */
-        /* padding-bottom: 100%; */
+        
+        
+    }
+
+    .buttonOpen{
+        font-family: 'Courier New', Courier, monospace;
+        border-radius: 10px;
+        margin-top: 100px;
+        padding: 40px;
+        font-size: 30px;
+        background-color: rgb(120, 150, 160);
+        color: black;
+        box-shadow:  3px 3px  rgb(150, 150, 150);
+    }
+    #app {
+        background-color: rgb(220, 232, 240);
+        display: flex;
+        flex-direction: column;
+
         width: 100%;
         align-items: center;
         justify-content: space-between;
@@ -92,19 +178,19 @@ export default {
     }
 
     .chatTop {
-        background-color: green;
+        background-color: rgb(120, 150, 160);
+        border-bottom: 2px solid rgb(30, 54, 73);
         width: 100%;
         height: 100px;
         margin-top: 0px;
         display: flex;
-        /* flex-direction: column; */
         justify-content: flex-start;
         align-items: center;
         padding-left: 100px;
     }
 
     .chatName {
-        color: wheat;
+        color: rgb(30, 54, 73);
         padding-right: 100px;
     }
 
@@ -114,21 +200,28 @@ export default {
     }
     
     .myChat{
+        border-radius: 10px;
+        box-shadow:  3px 3px  rgb(114, 114, 114);
         display: flex;
         background-color: white;
         justify-content: space-between;
         padding-left: 20px;
         padding-right: 20px;
         margin-left: 200px;
+        margin-right: 10px;
     }
 
     .otherChat{
+        border-radius: 10px;
+        box-shadow:  3px 3px  rgb(114, 114, 114);
         display: flex;
-        background-color: sienna;
+        background-color: rgb(30, 54, 73);
+        color: white;
         justify-content: space-between;
         padding-left: 20px;
         padding-right: 20px;
         margin-right: 200px;
+        margin-left: 10px;
     }
 
     .conversation{
@@ -158,17 +251,17 @@ export default {
         width: 100%;
         display: flex;
         height: 70px;
-        background-color: rgb(206, 206, 206);
+        background-color: rgb(120, 150, 160);
         padding-top:10px;
         padding-bottom: 10px;
         /* padding-left: -25px; */
-        border-top: 10px solid black;
+        border-top: 2px solid rgb(30, 54, 73);
         
     }
     .inputText {
         width: 100%;
         border: none;
-        background-color: rgb(206, 206, 206);
+        background-color: rgb(120, 150, 160);
         font-size: 25px;
         padding-left: 50px;
     }::placeholder{
@@ -179,7 +272,7 @@ export default {
 
     .buttonSend{
         width: 75px;
-        background-color: rgb(79, 118, 191);
+        background-color: rgb(30, 54, 73);
         border: none;
         border-radius: 100%;
         font-size: 25px;
